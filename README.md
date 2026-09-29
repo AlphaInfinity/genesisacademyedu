@@ -41,24 +41,15 @@ Use a local web server. Opening the files directly (`file://`) breaks some scrip
      `2606:50c0:8000::153` … `8003::153` if IPv6 is wanted)
 5. After DNS resolves, turn on **Enforce HTTPS** in **Settings → Pages**.
 6. Cancel the Weebly plan only after the GitHub Pages site is live and the newsletter form is
-   activated (below).
+   confirmed working (below).
 
 ## Activate the newsletter form
 
-The footer "Subscribe Today!" form on every page posts to Formspree, but its form ID is the
-placeholder `YOUR_FORM_ID`.
+The footer "Subscribe Today!" form on every page is live: it posts to Formspree at
+`https://formspree.io/f/xkjgyqkg`, and sign-ups go to that Formspree form's owner.
 
-1. Sign in at [formspree.io](https://formspree.io), create a new form, and set the email address
-   that should receive sign-ups. Formspree shows the form's endpoint, such as
-   `https://formspree.io/f/abcdwxyz`; the part after `/f/` is the form ID.
-2. Replace the placeholder in all pages (it appears only in the form's `action`):
-
-   ```sh
-   sed -i 's/YOUR_FORM_ID/abcdwxyz/' *.html
-   ```
-
-3. Publish, then submit the form once from the live site. Formspree emails the form's owner a
-   confirmation link for the first submission; click it, or later submissions are not delivered.
+To switch to a different Formspree form later, replace the ID in every page's form `action`:
+`sed -i 's/xkjgyqkg/NEW_ID/' *.html`.
 
 ## Weebly-dependent features (will not work on GitHub Pages)
 
@@ -66,7 +57,7 @@ Unless marked replaced, these are left exactly as they were on Weebly. Each one 
 
 | Feature | Page(s) | What depends on Weebly |
 | --- | --- | --- |
-| ~~**"Subscribe Today!" email form**~~ — **replaced** (footer, form id `form-165633829848770969`) | all 8 pages | Now posts to Formspree (`https://formspree.io/f/YOUR_FORM_ID`) with a single `email` field. The Weebly hidden fields and Weebly reCAPTCHA were removed. Until the placeholder is replaced (see [Activate the newsletter form](#activate-the-newsletter-form)), submissions get a Formspree error page. |
+| ~~**"Subscribe Today!" email form**~~ — **replaced** (footer, form id `form-165633829848770969`) | all 8 pages | Now posts to Formspree (`https://formspree.io/f/xkjgyqkg`; see [Activate the newsletter form](#activate-the-newsletter-form)) with a single `email` field. The Weebly hidden fields and Weebly reCAPTCHA were removed. |
 | **Weebly Customer Accounts** (member login bootstrap) | all 8 pages | Weebly's JS calls `/ajax/api/JsonRPC/CustomerAccounts/` on page load. On a static host this request fails without any visible effect. |
 | **Weebly Commerce** (mini cart) | all 8 pages | Calls `/ajax/api/JsonRPC/Commerce/` (`Checkout::getMiniCart`) on page load. Fails with no visible effect; the site has no Weebly store. |
 | **Weebly analytics (Snowplow "snowday")** | all 8 pages | `assets/.../js/wsnbn/snowday262.js` (bundled locally) sends page views to `ec.editmysite.com` for Weebly's site stats. It keeps sending to Weebly, and those stats disappear with the Weebly account. |
